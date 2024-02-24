@@ -8,7 +8,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Audio Recorder',
+      title: 'Centerpiece',
       theme: ThemeData(
         primaryColor: Colors.green[700], // Olive green primary color
         scaffoldBackgroundColor: Colors.green[100], // Light green background
@@ -24,7 +24,9 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Centerpiece'),
+        centerTitle: true,
+        automaticallyImplyLeading: false,
+        title: Text('Centerpiece', style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, fontFamily: 'RobotoMono')),
       ),
       body: Center(
         child: Column(
@@ -54,6 +56,7 @@ class HomeScreen extends StatelessWidget {
             IconButton(
               icon: Icon(Icons.home),
               onPressed: () {
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen()));
               },
             ),
             IconButton( //Chat/Email
@@ -77,12 +80,18 @@ class HomeScreen extends StatelessWidget {
 class RecordButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return FloatingActionButton(
-      onPressed: () {
-      //Recording functionality goes here
-      },
-      child: Icon(Icons.mic),
-      backgroundColor: Colors.green[700], // Olive green button color
+    return Container(
+      width: 175.0, // Specify the width
+      height: 175.0, // Specify the height
+      child: FloatingActionButton(
+        onPressed: () {
+          // Recording functionality goes here
+        },
+        child: Icon(Icons.mic,
+            size:
+                50), // Specify the icon size if you want to make it larger too
+        backgroundColor: Colors.green[700],
+      ),
     );
   }
 }
