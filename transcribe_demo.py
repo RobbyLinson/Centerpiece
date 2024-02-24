@@ -1,5 +1,7 @@
 #! python3.7
 
+import keyboard
+import json
 import argparse
 import os
 import numpy as np
@@ -13,8 +15,63 @@ from queue import Queue
 from time import sleep
 from sys import platform
 
+def save_entry_to_file(title, message, summary):
+    entry = {
+        "title": title,
+        "message": message,
+        "summary": summary
+    }
+    output_folder = "centerpiece/assets/summaries"
+    os.makedirs(output_folder, exist_ok=True)
+
+    index_file_path = os.path.join(output_folder, "index.txt")
+    # Read the current index from the index file or set it to 1 if the file doesn't exist
+    if os.path.exists(index_file_path):
+        with open(index_file_path, 'r') as index_file:
+            index = int(index_file.read())
+    else:
+        index = 1
+        
+    entry_file_path = os.path.join(output_folder, f"{index}.json")
+
+
+
+    # Write the entry to a JSON file
+    with open(entry_file_path, 'w') as entry_file:
+        json.dump(entry, entry_file, indent=2)
+
+    # Update the index in the index file
+    index += 1
+    with open(index_file_path, 'w') as index_file:
+        index_file.write(str(index))
+    
+    # OpenAI API
+    # Takes in a transcriptions
+    # Returns a summary of the transcription        
+
+def make_request(final_transcription):         
+    from openai import OpenAI
+    client = OpenAI()
+
+    completion = client.chat.completions.create(
+    model="gpt-3.5-turbo",
+    messages=[
+        {"role": "system", "content": "You are a summarizer, skilled in explaining texts in an easy understand way"},
+        {"role": "user", "content": final_transcription + " Summarize the text above."}
+    ]
+    )
+
+    print(completion.choices[0].message)
+    return completion.choices[0].message.content
 
 def main():
+
+    output_folder = "centerpiece/assets/summaries"
+    os.makedirs(output_folder, exist_ok=True)
+
+    # Use a timestamp to generate unique filenames
+    timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+    output_file_path = os.path.join(output_folder, f"output_{timestamp}.json")
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", default="medium", help="Model to use",
@@ -92,6 +149,7 @@ def main():
         data = audio.get_raw_data()
         data_queue.put(data)
 
+    
     # Create a background thread that will pass us raw audio bytes.
     # We could do this manually but SpeechRecognizer provides a nice helper.
     recorder.listen_in_background(source, record_callback, phrase_time_limit=record_timeout)
@@ -99,7 +157,7 @@ def main():
     # Cue the user that we're ready to go.
     print("Model loaded.\n")
 
-    while True:
+    while not keyboard.is_pressed('q'):
         try:
             now = datetime.utcnow()
             # Pull raw recorded audio from the queue.
@@ -145,8 +203,10 @@ def main():
                 # Infinite loops are bad for processors, must sleep.
                 sleep(0.25)
         except KeyboardInterrupt:
+            # save_entry_to_file("","","");
             break
-
+    
+    # Stop the background thread.
     print("\n\nTranscription:")
 
     final_transcription = ''
@@ -155,22 +215,14 @@ def main():
         print(line)
         # concatonate the transcription into a single string
         final_transcription += line + ' '
-    
 
-    from openai import OpenAI
-    client = OpenAI()
-
-    completion = client.chat.completions.create(
-    model="gpt-3.5-turbo",
-    messages=[
-        {"role": "system", "content": "You are a summarizer, skilled in explaining texts in an easy understand way"},
-        {"role": "user", "content": final_transcription + " Summarize the text above."}
-    ]
-    )
-
-    print(completion.choices[0].message)
+    summary = make_request(final_transcription)
+    title = input("What would you like to name the transcription?")
+    save_entry_to_file(title, final_transcription, summary)
+    input("Press Enter to save the transcription and summary to a file.")
 
 
+        
 
 if __name__ == "__main__":
     main()
