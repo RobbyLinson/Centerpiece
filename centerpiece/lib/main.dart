@@ -48,7 +48,7 @@ class HomeScreen extends StatelessWidget {
               onPressed: () {
               },
             ),
-            IconButton( //Flashcards
+            IconButton( //Summaries
               icon: Icon(Icons.library_books),
               onPressed: () {
               },
@@ -95,3 +95,7 @@ class RecordButton extends StatelessWidget {
     );
   }
 }
+
+
+
+
