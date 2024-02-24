@@ -6,6 +6,7 @@ import numpy as np
 import speech_recognition as sr
 import whisper
 import torch
+import torch.cuda
 
 from datetime import datetime, timedelta
 from queue import Queue
@@ -14,6 +15,7 @@ from sys import platform
 
 
 def main():
+
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", default="medium", help="Model to use",
                         choices=["tiny", "base", "small", "medium", "large"])
@@ -52,18 +54,26 @@ def main():
                 print(f"Microphone with name \"{name}\" found")
             return
         else:
+            print(f"Searching for microphone with name \"{mic_name}\"")
             for index, name in enumerate(sr.Microphone.list_microphone_names()):
                 if mic_name in name:
                     source = sr.Microphone(sample_rate=16000, device_index=index)
                     break
     else:
+        print("Using default microphone.")
+        
+
         source = sr.Microphone(sample_rate=16000)
 
+
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    
     # Load / Download model
     model = args.model
     if args.model != "large" and not args.non_english:
         model = model + ".en"
-    audio_model = whisper.load_model(model)
+    # Load the model and move it to the GPU if available
+    audio_model = whisper.load_model(model).to(device)
 
     record_timeout = args.record_timeout
     phrase_timeout = args.phrase_timeout
@@ -111,8 +121,11 @@ def main():
                 # Clamp the audio stream frequency to a PCM wavelength compatible default of 32768hz max.
                 audio_np = np.frombuffer(audio_data, dtype=np.int16).astype(np.float32) / 32768.0
 
+                # Move the audio data to the GPU if available
+                audio_tensor = torch.from_numpy(audio_np).to(device)
+
                 # Read the transcription.
-                result = audio_model.transcribe(audio_np, fp16=torch.cuda.is_available())
+                result = audio_model.transcribe(audio_tensor, fp16=torch.cuda.is_available())
                 text = result['text'].strip()
 
                 # If we detected a pause between recordings, add a new item to our transcription.
@@ -127,7 +140,7 @@ def main():
                 for line in transcription:
                     print(line)
                 # Flush stdout.
-                print('', end='', flush=True)
+                # print('', end='', flush=True)
 
                 # Infinite loops are bad for processors, must sleep.
                 sleep(0.25)
@@ -135,8 +148,28 @@ def main():
             break
 
     print("\n\nTranscription:")
+
+    final_transcription = ''
+
     for line in transcription:
         print(line)
+        # concatonate the transcription into a single string
+        final_transcription += line + ' '
+    
+
+    from openai import OpenAI
+    client = OpenAI()
+
+    completion = client.chat.completions.create(
+    model="gpt-3.5-turbo",
+    messages=[
+        {"role": "system", "content": "You are a summarizer, skilled in explaining texts in an easy understand way"},
+        {"role": "user", "content": final_transcription + " Summarize the text above."}
+    ]
+    )
+
+    print(completion.choices[0].message)
+
 
 
 if __name__ == "__main__":
