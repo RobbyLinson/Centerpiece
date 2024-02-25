@@ -117,19 +117,19 @@ class HomeScreen extends StatelessWidget {
                   constraints: BoxConstraints(minHeight: 1000),
                   position: RelativeRect.fromLTRB(0, 0, 0, 0),
                   items: <PopupMenuEntry>[
-                    PopupMenuItem(
+                    const PopupMenuItem(
                       child: ListTile(
                         leading: Icon(Icons.home),
                         title: Text('Home'),
                       ),
                     ),
-                    PopupMenuItem(
+                    const PopupMenuItem(
                       child: ListTile(
                         leading: Icon(Icons.settings),
                         title: Text('Settings'),
                       ),
                     ),
-                    PopupMenuItem(
+                    const PopupMenuItem(
                       child: ListTile(
                         leading: Icon(Icons.info),
                         title: Text('About'),
@@ -146,7 +146,10 @@ class HomeScreen extends StatelessWidget {
             IconButton(
               //Chat/Email
               icon: Icon(Icons.chat_bubble_outline),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => GroupScreen()));
+              },
             ),
             IconButton(
               //Profile
@@ -281,19 +284,203 @@ class LibraryScreen extends StatelessWidget {
                   constraints: BoxConstraints(minHeight: 1000),
                   position: RelativeRect.fromLTRB(0, 0, 0, 0),
                   items: <PopupMenuEntry>[
-                    PopupMenuItem(
+                    const PopupMenuItem(
                       child: ListTile(
                         leading: Icon(Icons.home),
                         title: Text('Home'),
                       ),
                     ),
-                    PopupMenuItem(
+                    const PopupMenuItem(
                       child: ListTile(
                         leading: Icon(Icons.settings),
                         title: Text('Settings'),
                       ),
                     ),
-                    PopupMenuItem(
+                    const PopupMenuItem(
+                      child: ListTile(
+                        leading: Icon(Icons.info),
+                        title: Text('About'),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.home),
+              onPressed: () {
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => HomeScreen()));
+              },
+            ),
+            IconButton(
+              //Chat/Email
+              icon: Icon(Icons.chat_bubble_outline),
+              onPressed: () {
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => GroupScreen()));
+              },
+            ),
+            IconButton(
+              //Profile
+              icon: Icon(Icons.person),
+              onPressed: () {
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => UserScreen()));
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class Group {
+  String name;
+
+  Group(this.name);
+}
+
+class GroupScreen extends StatefulWidget {
+  @override
+  _GroupScreenState createState() => _GroupScreenState();
+}
+
+class _GroupScreenState extends State<GroupScreen> {
+  List<Group> groups = [];
+
+  void _createNewGroup() async {
+    String? groupName = await _asyncInputDialog(context);
+    if (groupName != null && groupName.isNotEmpty) {
+      setState(() {
+        groups.add(Group(groupName));
+      });
+    }
+  }
+
+  Future<String?> _asyncInputDialog(BuildContext context) async {
+    String groupName = '';
+    return showDialog<String>(
+      context: context,
+      barrierDismissible: false, // User must tap a button to dismiss the dialog
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Enter Group Name'),
+          content: Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  autofocus: true,
+                  decoration: InputDecoration(labelText: 'Group Name'),
+                  onChanged: (value) {
+                    groupName = value;
+                  },
+                ),
+              )
+            ],
+          ),
+          actions: [
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Return null when cancelled
+              },
+            ),
+            TextButton(
+              child: Text('Create'),
+              onPressed: () {
+                Navigator.of(context).pop(groupName); // Return the group name
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        automaticallyImplyLeading: false,
+        title: BlinkingCursorTitle(
+          text: 'Centerpiece',
+          textStyle: TextStyle(
+            fontSize: 26,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'RobotoMono',
+          ),
+        ),
+      ),
+      body: ListView.builder(
+        itemCount: groups.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text(groups[index].name),
+            trailing: Wrap(
+              spacing: 12, // Space between buttons
+              children: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.delete),
+                  onPressed: () {
+                    setState(() {
+                      groups.removeAt(index);
+                    });
+                  },
+                ),
+                IconButton(
+                  icon: Icon(Icons.group),
+                  onPressed: () {
+                    // Join group functionality
+                  },
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _createNewGroup,
+        tooltip: 'Create New Group',
+        child: Icon(Icons.add),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        shape: CircularNotchedRectangle(),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            IconButton(
+              //Transcription Archive
+              icon: Icon(Icons.menu_book),
+              onPressed: () {
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => LibraryScreen()));
+              },
+            ),
+            IconButton(
+              //Summaries
+              icon: Icon(Icons.library_books),
+              onPressed: () {
+                showMenu(
+                  context: context,
+                  constraints: BoxConstraints(minHeight: 1000),
+                  position: RelativeRect.fromLTRB(0, 0, 0, 0),
+                  items: <PopupMenuEntry>[
+                    const PopupMenuItem(
+                      child: ListTile(
+                        leading: Icon(Icons.home),
+                        title: Text('Home'),
+                      ),
+                    ),
+                    const PopupMenuItem(
+                      child: ListTile(
+                        leading: Icon(Icons.settings),
+                        title: Text('Settings'),
+                      ),
+                    ),
+                    const PopupMenuItem(
                       child: ListTile(
                         leading: Icon(Icons.info),
                         title: Text('About'),
@@ -431,19 +618,19 @@ class _UserScreenState extends State<UserScreen> {
                   constraints: BoxConstraints(minHeight: 1000),
                   position: RelativeRect.fromLTRB(0, 0, 0, 0),
                   items: <PopupMenuEntry>[
-                    PopupMenuItem(
+                    const PopupMenuItem(
                       child: ListTile(
                         leading: Icon(Icons.home),
                         title: Text('Home'),
                       ),
                     ),
-                    PopupMenuItem(
+                    const PopupMenuItem(
                       child: ListTile(
                         leading: Icon(Icons.settings),
                         title: Text('Settings'),
                       ),
                     ),
-                    PopupMenuItem(
+                    const PopupMenuItem(
                       child: ListTile(
                         leading: Icon(Icons.info),
                         title: Text('About'),
@@ -463,7 +650,10 @@ class _UserScreenState extends State<UserScreen> {
             IconButton(
               //Chat/Email
               icon: Icon(Icons.chat_bubble_outline),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => GroupScreen()));
+              },
             ),
             IconButton(
               //Profile
