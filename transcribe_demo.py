@@ -1,6 +1,6 @@
 #! python3.7
-
-import keyboard
+# 
+# import keyboard
 import json
 import argparse
 import os
@@ -49,22 +49,31 @@ def save_entry_to_file(title, message, summary):
     # Takes in a transcriptions
     # Returns a summary of the transcription        
 
-def make_request(final_transcription):         
+def make_request(final_transcription, prompt_type):         
     from openai import OpenAI
     client = OpenAI()
+    if prompt_type == "speech":
+        prompt = "Summarize this speech."
+    elif prompt_type == "flashcards":
+        prompt = "Turn this speech into flashcards. Specifically in a JSON format with front and back fields."
+    elif prompt_type == "key":
+        prompt = "Write down the key main points of this speech."
+    else:
+        prompt = "Summarize this speech."
+
 
     completion = client.chat.completions.create(
     model="gpt-4",
     messages=[
         {"role": "system", "content": "You are a summarizer, skilled in explaining speeches in an easy to understand way."},
-        {"role": "user", "content": final_transcription + "Could you make flashcards for me? Based on this speech. I want to make sure I understand it. Please note the main points."},
+        {"role": "user", "content": final_transcription + prompt + "Please note there may be some errors in the transcription." + "Please do not be afraid to add in contextually relevant information."},
     ]
     )
 
     print(completion.choices[0].message)
     return completion.choices[0].message.content
 
-def main():
+def transcribe_and_summarize():
 
     output_folder = "centerpiece/assets/summaries"
     os.makedirs(output_folder, exist_ok=True)
@@ -78,11 +87,11 @@ def main():
                         choices=["tiny", "base", "small", "medium", "large"])
     parser.add_argument("--non_english", action='store_true',
                         help="Don't use the english model.")
-    parser.add_argument("--energy_threshold", default=1000,
+    parser.add_argument("--energy_threshold", default=600,
                         help="Energy level for mic to detect.", type=int)
-    parser.add_argument("--record_timeout", default=2,
+    parser.add_argument("--record_timeout", default=7,
                         help="How real time the recording is in seconds.", type=float)
-    parser.add_argument("--phrase_timeout", default=3,
+    parser.add_argument("--phrase_timeout", default=1,
                         help="How much empty space between recordings before we "
                              "consider it a new line in the transcription.", type=float)
     if 'linux' in platform:
@@ -158,11 +167,13 @@ def main():
     print("Model loaded.\n")
 
 
+
     # listen to an api request to stop recording
     stop_recording = False
 
-
-    while not stop_recording:
+    import keyboard
+    # record 
+    while not keyboard.is_pressed('q'):
         try:
             now = datetime.utcnow()
             # Pull raw recorded audio from the queue.
@@ -220,9 +231,9 @@ def main():
         print(line)
         # concatonate the transcription into a single string
         final_transcription += line + ' '
-
-    summary = make_request(final_transcription)
     title = input("What would you like to name the transcription?")
+    prompt = input("What would you like to do with the transcription? (flashcards, key, speech)")
+    summary = make_request(final_transcription, prompt)
     save_entry_to_file(title, final_transcription, summary)
     input("Press Enter to save the transcription and summary to a file.")
 
@@ -230,4 +241,4 @@ def main():
         
 
 if __name__ == "__main__":
-    main()
+    transcribe_and_summarize()
