@@ -61,6 +61,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Centerpiece',
       theme: ThemeData(
+        fontFamily: 'RobotoMono',
         primaryColor: Colors.green[700], // Olive green primary color
         scaffoldBackgroundColor: Colors.green[100], // Light green background
         visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -218,7 +219,17 @@ class LibraryScreen extends StatelessWidget {
                         builder: (context) {
                           return AlertDialog(
                             title: Text(item.title),
-                            content: Text(item.summary),
+                            content: Container(
+                              height: MediaQuery.of(context).size.height *
+                                  0.5, // 50% of screen height
+                              width: MediaQuery.of(context)
+                                  .size
+                                  .width, // Screen width
+                              child: SingleChildScrollView(
+                                child:
+                                    Text(item.summary), // The transcript text
+                              ),
+                            ),
                             actions: <Widget>[
                               TextButton(
                                 child: Text('Close'),
@@ -229,21 +240,30 @@ class LibraryScreen extends StatelessWidget {
                               TextButton(
                                 child: Text('Transcript'),
                                 onPressed: () {
-                                  // Display the message item from the glossary
                                   showDialog(
                                     context: context,
                                     builder: (context) {
                                       return AlertDialog(
                                         title: Text('Transcript'),
-                                        content: SingleChildScrollView(
-                                          child: Text(item.message),
+                                        content: Container(
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.5, // 50% of screen height
+                                          width: MediaQuery.of(context)
+                                              .size
+                                              .width, // Screen width
+                                          child: SingleChildScrollView(
+                                            child: Text(item
+                                                .message), // The transcript text
+                                          ),
                                         ),
                                         actions: <Widget>[
                                           TextButton(
                                             child: Text('Close'),
                                             onPressed: () {
                                               Navigator.of(context)
-                                                  .pop(); // Close the transcript dialog
+                                                  .pop(); // Close the dialog
                                             },
                                           ),
                                         ],
@@ -417,26 +437,34 @@ class _GroupScreenState extends State<GroupScreen> {
       body: ListView.builder(
         itemCount: groups.length,
         itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(groups[index].name),
-            trailing: Wrap(
-              spacing: 12, // Space between buttons
-              children: <Widget>[
-                IconButton(
-                  icon: Icon(Icons.delete),
-                  onPressed: () {
-                    setState(() {
-                      groups.removeAt(index);
-                    });
-                  },
-                ),
-                IconButton(
-                  icon: Icon(Icons.group),
-                  onPressed: () {
-                    // Join group functionality
-                  },
-                ),
-              ],
+          return Card(
+            shape: RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.circular(10.0), // Rounded corners for the Card
+            ),
+            elevation: 4.0, // Shadow effect for the Card
+            margin: EdgeInsets.all(8.0), // Space around the Card
+            child: ListTile(
+              title: Text(groups[index].name),
+              trailing: Wrap(
+                spacing: 12, // Space between buttons
+                children: <Widget>[
+                  IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: () {
+                      setState(() {
+                        groups.removeAt(index);
+                      });
+                    },
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.group),
+                    onPressed: () {
+                      // Join group functionality
+                    },
+                  ),
+                ],
+              ),
             ),
           );
         },
