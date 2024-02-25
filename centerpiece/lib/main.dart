@@ -63,7 +63,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         fontFamily: 'RobotoMono',
         primaryColor: Colors.green[700], // Olive green primary color
-        scaffoldBackgroundColor: Colors.green[100], // Light green background
+        scaffoldBackgroundColor:
+            Color.fromARGB(255, 233, 242, 233), // Light green background
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: HomeScreen(),
@@ -367,9 +368,9 @@ class GroupScreen extends StatefulWidget {
   _GroupScreenState createState() => _GroupScreenState();
 }
 
-class _GroupScreenState extends State<GroupScreen> {
-  List<Group> groups = [];
+List<Group> groups = [];
 
+class _GroupScreenState extends State<GroupScreen> {
   void _createNewGroup() async {
     String? groupName = await _asyncInputDialog(context);
     if (groupName != null && groupName.isNotEmpty) {
@@ -574,33 +575,64 @@ class _UserScreenState extends State<UserScreen> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           SizedBox(height: 20), // Spacing from the top
-          CircleAvatar(
-            radius: 50, // Size of the avatar
-            backgroundImage: AssetImage(
-                'images/stockphoto.jpg'), // Replace with your image asset path
+          Column(
+            mainAxisSize: MainAxisSize.min, // Use the minimum space necessary
+            children: <Widget>[
+              CircleAvatar(
+                radius: 50, // Size of the avatar
+                backgroundImage: AssetImage(
+                    'images/stockphoto.jpg'), // Your image asset path
+              ),
+              SizedBox(height: 8), // Provide some vertical spacing
+              Text(
+                'John Centerpiece', // Replace with a dynamic username variable if needed
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
           ),
-          SizedBox(height: 20), // Spacing between avatar and next item
-          ListTile(
-            leading: Icon(Icons.settings),
-            title: Text('Settings'),
-            onTap: () {
-              // Handle settings tap
-            },
+          SizedBox(height: 20), // Spacing from the top
+          // Settings ListTile wrapped in a Card
+          Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            elevation: 4.0,
+            margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+            child: ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('Settings'),
+              onTap: () {
+                // Handle settings tap
+              },
+            ),
           ),
-          SwitchListTile(
-            title: Text('Auto Delete Transcripts'),
-            value: _autoDeleteTranscripts,
-            onChanged: (bool value) {
-              setState(() {
-                _autoDeleteTranscripts = value;
-              });
-            },
+          // Auto Delete Transcripts SwitchListTile wrapped in a Card
+          Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            elevation: 4.0,
+            margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+            child: SwitchListTile(
+              title: Text('Auto Delete Transcripts'),
+              value:
+                  _autoDeleteTranscripts, // Make sure this variable is defined in your State class
+              onChanged: (bool value) {
+                setState(() {
+                  _autoDeleteTranscripts = value;
+                });
+              },
+            ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red, // Button color
+                backgroundColor:
+                    Color.fromARGB(255, 146, 202, 161), // Button color
               ),
               onPressed: () {
                 // Add logout functionality here
@@ -613,7 +645,7 @@ class _UserScreenState extends State<UserScreen> {
           if (Platform.isWindows) // Quit Button
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
+                backgroundColor: Color.fromARGB(255, 146, 202, 161),
               ),
               onPressed: () {
                 exit(0);
@@ -747,7 +779,8 @@ class _RecordButtonState extends State<RecordButton> {
             _isRecording = !_isRecording;
           });
         },
-        backgroundColor: _isRecording ? Colors.red : Colors.green[700],
+        backgroundColor:
+            _isRecording ? Colors.red : Color.fromARGB(255, 146, 202, 161),
         child: AnimatedSwitcher(
           duration: Duration(milliseconds: 500),
           child: _isRecording
