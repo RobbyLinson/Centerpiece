@@ -119,26 +119,30 @@ class HomeScreen extends StatelessWidget {
                   constraints: BoxConstraints(minHeight: 1000),
                   position: RelativeRect.fromLTRB(0, 0, 0, 0),
                   items: <PopupMenuEntry>[
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       child: ListTile(
+                        onTap: () {Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => KeyPointsScreen()));},
                         leading: Icon(Icons.key),
                         title: Text('Key Points'),
                       ),
                     ),
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       child: ListTile(
+                        onTap: () {Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => KeyPointsScreen()));},
                         leading: Icon(Icons.accessibility_new_rounded),
                         title: Text('Speech'),
                       ),
                     ),
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       child: ListTile(
+                        onTap: () {Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => KeyPointsScreen()));},
                         leading: Icon(Icons.amp_stories_sharp),
                         title: Text('Flash Cards'),
                       ),
                     ),
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       child: ListTile(
+                        onTap: () {Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => KeyPointsScreen()));},
                         leading: Icon(Icons.book),
                         title: Text('Further Reading'),
                       ),
@@ -311,26 +315,30 @@ class LibraryScreen extends StatelessWidget {
                   constraints: BoxConstraints(minHeight: 1000),
                   position: RelativeRect.fromLTRB(0, 0, 0, 0),
                   items: <PopupMenuEntry>[
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       child: ListTile(
+                        onTap: () {Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => KeyPointsScreen()));},
                         leading: Icon(Icons.key),
                         title: Text('Key Points'),
                       ),
                     ),
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       child: ListTile(
+                        onTap: () {Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => KeyPointsScreen()));},
                         leading: Icon(Icons.accessibility_new_rounded),
                         title: Text('Speech'),
                       ),
                     ),
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       child: ListTile(
+                        onTap: () {Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => KeyPointsScreen()));},
                         leading: Icon(Icons.amp_stories_sharp),
                         title: Text('Flash Cards'),
                       ),
                     ),
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       child: ListTile(
+                        onTap: () {Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => KeyPointsScreen()));},
                         leading: Icon(Icons.book),
                         title: Text('Further Reading'),
                       ),
@@ -509,26 +517,30 @@ class _GroupScreenState extends State<GroupScreen> {
                   constraints: BoxConstraints(minHeight: 1000),
                   position: RelativeRect.fromLTRB(0, 0, 0, 0),
                   items: <PopupMenuEntry>[
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       child: ListTile(
+                        onTap: () {Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => KeyPointsScreen()));},
                         leading: Icon(Icons.key),
                         title: Text('Key Points'),
                       ),
                     ),
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       child: ListTile(
+                        onTap: () {Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => KeyPointsScreen()));},
                         leading: Icon(Icons.accessibility_new_rounded),
                         title: Text('Speech'),
                       ),
                     ),
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       child: ListTile(
+                        onTap: () {Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => KeyPointsScreen()));},
                         leading: Icon(Icons.amp_stories_sharp),
                         title: Text('Flash Cards'),
                       ),
                     ),
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       child: ListTile(
+                        onTap: () {Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => KeyPointsScreen()));},
                         leading: Icon(Icons.book),
                         title: Text('Further Reading'),
                       ),
@@ -696,26 +708,30 @@ class _UserScreenState extends State<UserScreen> {
                   constraints: BoxConstraints(minHeight: 1000),
                   position: RelativeRect.fromLTRB(0, 0, 0, 0),
                   items: <PopupMenuEntry>[
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       child: ListTile(
+                        onTap: () {Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => KeyPointsScreen()));},
                         leading: Icon(Icons.key),
                         title: Text('Key Points'),
                       ),
                     ),
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       child: ListTile(
+                        onTap: () {Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => KeyPointsScreen()));},
                         leading: Icon(Icons.accessibility_new_rounded),
                         title: Text('Speech'),
                       ),
                     ),
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       child: ListTile(
+                        onTap: () {Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => KeyPointsScreen()));},
                         leading: Icon(Icons.amp_stories_sharp),
                         title: Text('Flash Cards'),
                       ),
                     ),
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       child: ListTile(
+                        onTap: () {Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => KeyPointsScreen()));},
                         leading: Icon(Icons.book),
                         title: Text('Further Reading'),
                       ),
@@ -884,4 +900,203 @@ class GlossaryItem {
 
   GlossaryItem(
       {required this.title, required this.summary, required this.message});
+}
+
+class KeyPointsScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        automaticallyImplyLeading: false,
+        title: BlinkingCursorTitle(
+          text: 'Centerpiece',
+          textStyle: TextStyle(
+            fontSize: 26,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'RobotoMono',
+          ),
+        ),
+      ),
+      body: FutureBuilder<List<GlossaryItem>>(
+        future: getTitlesFromJsonFiles(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          } else {
+            // Display buttons with titles
+            return ListView.builder(
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) {
+                GlossaryItem item = snapshot.data![index];
+                // Check if the current item is "Example glossary" to set a taller height
+                double buttonHeight =
+                    item.title == "Example glossary" ? 100.0 : 60.0;
+                return Container(
+                  height: buttonHeight, // Use the height variable here
+                  margin: EdgeInsets.only(
+                      bottom: 8.0), // Add some space between buttons
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: Size(double.infinity,
+                          buttonHeight), // Button gets its height from the variable
+                      padding: EdgeInsets.symmetric(
+                          vertical:
+                              16), // Optional: add padding for visual enhancement
+                      // You can add more style customization here if needed
+                    ),
+                    onPressed: () {
+                      // Show the AlertDialog when the button is clicked
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: Text(item.title),
+                            content: Container(
+                              height: MediaQuery.of(context).size.height *
+                                  0.5, // 50% of screen height
+                              width: MediaQuery.of(context)
+                                  .size
+                                  .width, // Screen width
+                              child: SingleChildScrollView(
+                                child:
+                                    Text(item.summary), // The transcript text
+                              ),
+                            ),
+                            actions: <Widget>[
+                              TextButton(
+                                child: Text('Close'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                              TextButton(
+                                child: Text('Transcript'),
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: Text('Transcript'),
+                                        content: Container(
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.5, // 50% of screen height
+                                          width: MediaQuery.of(context)
+                                              .size
+                                              .width, // Screen width
+                                          child: SingleChildScrollView(
+                                            child: Text(item
+                                                .message), // The transcript text
+                                          ),
+                                        ),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            child: Text('Close'),
+                                            onPressed: () {
+                                              Navigator.of(context)
+                                                  .pop(); // Close the dialog
+                                            },
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    child: Text(item.title),
+                  ),
+                );
+              },
+            );
+          }
+        },
+      ),
+      bottomNavigationBar: BottomAppBar(
+        shape: CircularNotchedRectangle(),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            IconButton(
+              //Transcription Archive
+              icon: Icon(Icons.menu_book),
+              onPressed: () {},
+            ),
+            IconButton(
+              //Summaries
+              icon: Icon(Icons.library_books),
+              onPressed: () {
+                showMenu(
+                  context: context,
+                  constraints: BoxConstraints(minHeight: 1000),
+                  position: RelativeRect.fromLTRB(0, 0, 0, 0),
+                  items: <PopupMenuEntry>[
+                    PopupMenuItem(
+                      child: ListTile(
+                        onTap: () {Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => KeyPointsScreen()));},
+                        leading: Icon(Icons.key),
+                        title: Text('Key Points'),
+                      ),
+                    ),
+                    PopupMenuItem(
+                      child: ListTile(
+                        onTap: () {Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => KeyPointsScreen()));},
+                        leading: Icon(Icons.accessibility_new_rounded),
+                        title: Text('Speech'),
+                      ),
+                    ),
+                    PopupMenuItem(
+                      child: ListTile(
+                        onTap: () {Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => KeyPointsScreen()));},
+                        leading: Icon(Icons.amp_stories_sharp),
+                        title: Text('Flash Cards'),
+                      ),
+                    ),
+                    PopupMenuItem(
+                      child: ListTile(
+                        onTap: () {Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => KeyPointsScreen()));},
+                        leading: Icon(Icons.book),
+                        title: Text('Further Reading'),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.home),
+              onPressed: () {
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => HomeScreen()));
+              },
+            ),
+            IconButton(
+              //Chat/Email
+              icon: Icon(Icons.chat_bubble_outline),
+              onPressed: () {
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => GroupScreen()));
+              },
+            ),
+            IconButton(
+              //Profile
+              icon: Icon(Icons.person),
+              onPressed: () {
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => UserScreen()));
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
