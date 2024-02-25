@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:async';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:http/http.dart' as http;
 
 void main() {
   runApp(MyApp());
@@ -330,24 +331,101 @@ class LibraryScreen extends StatelessWidget {
   }
 }
 
-class RecordButton extends StatelessWidget {
+class RecordButton extends StatefulWidget {
+  @override
+  _RecordButtonState createState() => _RecordButtonState();
+}
+
+class _RecordButtonState extends State<RecordButton> {
+  bool _isRecording = false;
+  Timer? _timer;
+  int _dotIndex = 0;
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  void _startBlinking() {
+    const duration = Duration(milliseconds: 500);
+    _timer = Timer.periodic(duration, (Timer timer) {
+      setState(() {
+        _dotIndex = (_dotIndex + 1) % 3; // Cycle through dots
+      });
+    });
+  }
+
+  void _stopBlinking() {
+    _timer?.cancel();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 175.0, // Specify the width
-      height: 175.0, // Specify the height
+      width: 175.0,
+      height: 175.0,
       child: FloatingActionButton(
         onPressed: () {
-          // Recording functionality goes here
+          if (_isRecording) {
+            // Send stop_transcription API call
+            http.get(Uri.parse('http://127.0.0.1:5000/stop_transcription'));
+            _stopBlinking();
+          } else {
+            // Send start_transcription API call
+            http.get(Uri.parse('http://127.0.0.1:5000/start_transcription'));
+            _startBlinking();
+          }
+          // Toggle the recording state
+          setState(() {
+            _isRecording = !_isRecording;
+          });
         },
-        child: Icon(Icons.mic,
-            size:
-                50), // Specify the icon size if you want to make it larger too
-        backgroundColor: Colors.green[700],
+        backgroundColor: _isRecording ? Colors.red : Colors.green[700],
+        child: AnimatedSwitcher(
+          duration: Duration(milliseconds: 500),
+          child: _isRecording
+              ? Row(
+                  key: UniqueKey(),
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _dotIndex == 0
+                        ? Dot(size: 15, color: Colors.white)
+                        : SizedBox(width: 20),
+                    _dotIndex == 1
+                        ? Dot(size: 15, color: Colors.white)
+                        : SizedBox(width: 20),
+                    _dotIndex == 2
+                        ? Dot(size: 15, color: Colors.white)
+                        : SizedBox(width: 20),
+                  ],
+                )
+              : Icon(Icons.mic, size: 50),
+        ),
       ),
     );
   }
 }
+
+class Dot extends StatelessWidget {
+  final double size;
+  final Color color;
+
+  const Dot({Key? key, required this.size, required this.color}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        color: color,
+        shape: BoxShape.circle,
+      ),
+    );
+  }
+}
+
 
 Future<List<GlossaryItem>> getTitlesFromJsonFiles() async {
   List<GlossaryItem> glossaryItems = [];
