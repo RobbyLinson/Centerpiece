@@ -54,10 +54,10 @@ def make_request(final_transcription):
     client = OpenAI()
 
     completion = client.chat.completions.create(
-    model="gpt-3.5-turbo",
+    model="gpt-4",
     messages=[
-        {"role": "system", "content": "You are a summarizer, skilled in explaining texts in an easy understand way"},
-        {"role": "user", "content": final_transcription + " Summarize the text above."}
+        {"role": "system", "content": "You are a summarizer, skilled in explaining speeches in an easy to understand way."},
+        {"role": "user", "content": final_transcription + "Could you make flashcards for me? Based on this speech. I want to make sure I understand it. Please note the main points."},
     ]
     )
 
@@ -157,7 +157,12 @@ def main():
     # Cue the user that we're ready to go.
     print("Model loaded.\n")
 
-    while not keyboard.is_pressed('q'):
+
+    # listen to an api request to stop recording
+    stop_recording = False
+
+
+    while not stop_recording:
         try:
             now = datetime.utcnow()
             # Pull raw recorded audio from the queue.
