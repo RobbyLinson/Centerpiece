@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:async';
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' as http;
+import 'package:flutter/services.dart';
 
 void main() {
   runApp(MyApp());
@@ -141,10 +141,7 @@ class HomeScreen extends StatelessWidget {
             ),
             IconButton(
               icon: Icon(Icons.home),
-              onPressed: () {
-                Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) => HomeScreen()));
-              },
+              onPressed: () {},
             ),
             IconButton(
               //Chat/Email
@@ -155,7 +152,8 @@ class HomeScreen extends StatelessWidget {
               //Profile
               icon: Icon(Icons.person),
               onPressed: () {
-                // Handle profile button press
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => UserScreen()));
               },
             ),
           ],
@@ -321,6 +319,156 @@ class LibraryScreen extends StatelessWidget {
               //Profile
               icon: Icon(Icons.person),
               onPressed: () {
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => UserScreen()));
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class UserScreen extends StatefulWidget {
+  @override
+  _UserScreenState createState() => _UserScreenState();
+}
+
+bool _autoDeleteTranscripts = false;
+
+class _UserScreenState extends State<UserScreen> {
+  // Initial state of the switch
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        automaticallyImplyLeading: false,
+        title: BlinkingCursorTitle(
+          text: 'Centerpiece',
+          textStyle: TextStyle(
+            fontSize: 26,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'RobotoMono',
+          ),
+        ),
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          SizedBox(height: 20), // Spacing from the top
+          CircleAvatar(
+            radius: 50, // Size of the avatar
+            backgroundImage: AssetImage(
+                'images/stockphoto.jpg'), // Replace with your image asset path
+          ),
+          SizedBox(height: 20), // Spacing between avatar and next item
+          ListTile(
+            leading: Icon(Icons.settings),
+            title: Text('Settings'),
+            onTap: () {
+              // Handle settings tap
+            },
+          ),
+          SwitchListTile(
+            title: Text('Auto Delete Transcripts'),
+            value: _autoDeleteTranscripts,
+            onChanged: (bool value) {
+              setState(() {
+                _autoDeleteTranscripts = value;
+              });
+            },
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16.0),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red, // Button color
+              ),
+              onPressed: () {
+                // Add logout functionality here
+              },
+              child:
+                  Text('Logout', style: TextStyle(fontWeight: FontWeight.bold)),
+            ),
+          ),
+
+          if (Platform.isWindows) // Quit Button
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+              ),
+              onPressed: () {
+                exit(0);
+                // Close the app
+              },
+              child:
+                  Text('Quit', style: TextStyle(fontWeight: FontWeight.bold)),
+            ),
+        ],
+      ),
+      bottomNavigationBar: BottomAppBar(
+        shape: CircularNotchedRectangle(),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            IconButton(
+              //Transcription Archive
+              icon: Icon(Icons.menu_book),
+              onPressed: () {
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => LibraryScreen()));
+              },
+            ),
+            IconButton(
+              //Summaries
+              icon: Icon(Icons.library_books),
+              onPressed: () {
+                showMenu(
+                  context: context,
+                  constraints: BoxConstraints(minHeight: 1000),
+                  position: RelativeRect.fromLTRB(0, 0, 0, 0),
+                  items: <PopupMenuEntry>[
+                    PopupMenuItem(
+                      child: ListTile(
+                        leading: Icon(Icons.home),
+                        title: Text('Home'),
+                      ),
+                    ),
+                    PopupMenuItem(
+                      child: ListTile(
+                        leading: Icon(Icons.settings),
+                        title: Text('Settings'),
+                      ),
+                    ),
+                    PopupMenuItem(
+                      child: ListTile(
+                        leading: Icon(Icons.info),
+                        title: Text('About'),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.home),
+              onPressed: () {
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => HomeScreen()));
+              },
+            ),
+            IconButton(
+              //Chat/Email
+              icon: Icon(Icons.chat_bubble_outline),
+              onPressed: () {},
+            ),
+            IconButton(
+              //Profile
+              icon: Icon(Icons.person),
+              onPressed: () {
                 // Handle profile button press
               },
             ),
@@ -411,7 +559,8 @@ class Dot extends StatelessWidget {
   final double size;
   final Color color;
 
-  const Dot({Key? key, required this.size, required this.color}) : super(key: key);
+  const Dot({Key? key, required this.size, required this.color})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -425,7 +574,6 @@ class Dot extends StatelessWidget {
     );
   }
 }
-
 
 Future<List<GlossaryItem>> getTitlesFromJsonFiles() async {
   List<GlossaryItem> glossaryItems = [];
