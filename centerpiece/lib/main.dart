@@ -110,11 +110,40 @@ class HomeScreen extends StatelessWidget {
             IconButton(
               //Summaries
               icon: Icon(Icons.library_books),
-              onPressed: () {},
+              onPressed: () {
+                showMenu(
+                  context: context,
+                  constraints: BoxConstraints(minHeight: 1000),
+                  position: RelativeRect.fromLTRB(0, 0, 0, 0),
+                  items: <PopupMenuEntry>[
+                    PopupMenuItem(
+                      child: ListTile(
+                        leading: Icon(Icons.home),
+                        title: Text('Home'),
+                      ),
+                    ),
+                    PopupMenuItem(
+                      child: ListTile(
+                        leading: Icon(Icons.settings),
+                        title: Text('Settings'),
+                      ),
+                    ),
+                    PopupMenuItem(
+                      child: ListTile(
+                        leading: Icon(Icons.info),
+                        title: Text('About'),
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
             IconButton(
               icon: Icon(Icons.home),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => HomeScreen()));
+              },
             ),
             IconButton(
               //Chat/Email
@@ -247,7 +276,33 @@ class LibraryScreen extends StatelessWidget {
             IconButton(
               //Summaries
               icon: Icon(Icons.library_books),
-              onPressed: () {},
+              onPressed: () {
+                showMenu(
+                  context: context,
+                  constraints: BoxConstraints(minHeight: 1000),
+                  position: RelativeRect.fromLTRB(0, 0, 0, 0),
+                  items: <PopupMenuEntry>[
+                    PopupMenuItem(
+                      child: ListTile(
+                        leading: Icon(Icons.home),
+                        title: Text('Home'),
+                      ),
+                    ),
+                    PopupMenuItem(
+                      child: ListTile(
+                        leading: Icon(Icons.settings),
+                        title: Text('Settings'),
+                      ),
+                    ),
+                    PopupMenuItem(
+                      child: ListTile(
+                        leading: Icon(Icons.info),
+                        title: Text('About'),
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
             IconButton(
               icon: Icon(Icons.home),
