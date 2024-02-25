@@ -121,20 +121,26 @@ class HomeScreen extends StatelessWidget {
                   items: <PopupMenuEntry>[
                     const PopupMenuItem(
                       child: ListTile(
-                        leading: Icon(Icons.home),
-                        title: Text('Home'),
+                        leading: Icon(Icons.key),
+                        title: Text('Key Points'),
                       ),
                     ),
                     const PopupMenuItem(
                       child: ListTile(
-                        leading: Icon(Icons.settings),
-                        title: Text('Settings'),
+                        leading: Icon(Icons.accessibility_new_rounded),
+                        title: Text('Speech'),
                       ),
                     ),
                     const PopupMenuItem(
                       child: ListTile(
-                        leading: Icon(Icons.info),
-                        title: Text('About'),
+                        leading: Icon(Icons.amp_stories_sharp),
+                        title: Text('Flash Cards'),
+                      ),
+                    ),
+                    const PopupMenuItem(
+                      child: ListTile(
+                        leading: Icon(Icons.book),
+                        title: Text('Further Reading'),
                       ),
                     ),
                   ],
@@ -307,20 +313,26 @@ class LibraryScreen extends StatelessWidget {
                   items: <PopupMenuEntry>[
                     const PopupMenuItem(
                       child: ListTile(
-                        leading: Icon(Icons.home),
-                        title: Text('Home'),
+                        leading: Icon(Icons.key),
+                        title: Text('Key Points'),
                       ),
                     ),
                     const PopupMenuItem(
                       child: ListTile(
-                        leading: Icon(Icons.settings),
-                        title: Text('Settings'),
+                        leading: Icon(Icons.accessibility_new_rounded),
+                        title: Text('Speech'),
                       ),
                     ),
                     const PopupMenuItem(
                       child: ListTile(
-                        leading: Icon(Icons.info),
-                        title: Text('About'),
+                        leading: Icon(Icons.amp_stories_sharp),
+                        title: Text('Flash Cards'),
+                      ),
+                    ),
+                    const PopupMenuItem(
+                      child: ListTile(
+                        leading: Icon(Icons.book),
+                        title: Text('Further Reading'),
                       ),
                     ),
                   ],
@@ -499,20 +511,26 @@ class _GroupScreenState extends State<GroupScreen> {
                   items: <PopupMenuEntry>[
                     const PopupMenuItem(
                       child: ListTile(
-                        leading: Icon(Icons.home),
-                        title: Text('Home'),
+                        leading: Icon(Icons.key),
+                        title: Text('Key Points'),
                       ),
                     ),
                     const PopupMenuItem(
                       child: ListTile(
-                        leading: Icon(Icons.settings),
-                        title: Text('Settings'),
+                        leading: Icon(Icons.accessibility_new_rounded),
+                        title: Text('Speech'),
                       ),
                     ),
                     const PopupMenuItem(
                       child: ListTile(
-                        leading: Icon(Icons.info),
-                        title: Text('About'),
+                        leading: Icon(Icons.amp_stories_sharp),
+                        title: Text('Flash Cards'),
+                      ),
+                    ),
+                    const PopupMenuItem(
+                      child: ListTile(
+                        leading: Icon(Icons.book),
+                        title: Text('Further Reading'),
                       ),
                     ),
                   ],
@@ -680,20 +698,26 @@ class _UserScreenState extends State<UserScreen> {
                   items: <PopupMenuEntry>[
                     const PopupMenuItem(
                       child: ListTile(
-                        leading: Icon(Icons.home),
-                        title: Text('Home'),
+                        leading: Icon(Icons.key),
+                        title: Text('Key Points'),
                       ),
                     ),
                     const PopupMenuItem(
                       child: ListTile(
-                        leading: Icon(Icons.settings),
-                        title: Text('Settings'),
+                        leading: Icon(Icons.accessibility_new_rounded),
+                        title: Text('Speech'),
                       ),
                     ),
                     const PopupMenuItem(
                       child: ListTile(
-                        leading: Icon(Icons.info),
-                        title: Text('About'),
+                        leading: Icon(Icons.amp_stories_sharp),
+                        title: Text('Flash Cards'),
+                      ),
+                    ),
+                    const PopupMenuItem(
+                      child: ListTile(
+                        leading: Icon(Icons.book),
+                        title: Text('Further Reading'),
                       ),
                     ),
                   ],
